@@ -1,10 +1,10 @@
 {
 	"name": "DeckRoulette",
 	"author": "davocarli",
-	"flags": ["", ""],
+	"flags": [],
 	"publish": {
 		"tags": ["random", "library", "games"],
 		"description": "A plugin that allows you to navigate to a random game in your library.",
-		"image": "https://opengraph.githubassets.com/1/SteamDeckHomebrew/PluginLoader"
+		"image": "https://github.com/davocarli/deck-roulette/blob/main/screenshots/001_random_game.jpg?raw=true"
 	}
 }

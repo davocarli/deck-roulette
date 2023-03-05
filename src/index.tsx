@@ -1,21 +1,13 @@
 import {
 	ButtonItem,
 	definePlugin,
-	DialogButton,
-	Menu,
-	MenuItem,
-	Navigation,
 	PanelSection,
 	PanelSectionRow,
 	Router,
 	ServerAPI,
-	showContextMenu,
 	staticClasses
 } from "decky-frontend-lib"
-import { VFC } from "react"
 import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi"
-
-import logo from "../assets/logo.png"
 
 const randomIndex = (max: number) => Math.floor(Math.random() * max)
 
