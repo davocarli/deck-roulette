@@ -3,8 +3,8 @@
 	"author": "davocarli",
 	"flags": [],
 	"publish": {
-		"tags": ["random", "library", "games"],
-		"description": "A plugin that allows you to navigate to a random game in your library.",
+		"tags": ["random", "library", "games", "collections"],
+		"description": "A plugin that allows you to navigate to a random game in your library or a Steam Collection.",
 		"image": "https://github.com/davocarli/deck-roulette/blob/main/screenshots/001_random_game.jpg?raw=true"
 	}
 }

@@ -62,7 +62,7 @@ const DeckRoulette = ({ serverApi }: { serverApi: ServerAPI }) => {
 								)
 							}
 						>
-							Random Installed Game (
+							Installed Game (
 							{collections["local-install"].appIds.length})
 						</ButtonItem>
 					</PanelSectionRow>
@@ -76,7 +76,7 @@ const DeckRoulette = ({ serverApi }: { serverApi: ServerAPI }) => {
 							)
 						}
 					>
-						Random Library Game ({allApps.length})
+						Library Game ({allApps.length})
 					</ButtonItem>
 				</PanelSectionRow>
 			</PanelSection>
