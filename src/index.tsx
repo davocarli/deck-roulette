@@ -3,53 +3,148 @@ import {
 	definePlugin,
 	PanelSection,
 	PanelSectionRow,
-	Router,
 	ServerAPI,
 	staticClasses
 } from "decky-frontend-lib"
+import React, { useState } from "react"
 import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi"
 
-const randomIndex = (max: number) => Math.floor(Math.random() * max)
+import { EXCLUDE_COLLECTION_IDS, getAllApps, getCollections, navigateToRandomGame } from "./utils"
 
-const getAppIds = (installedOnly: boolean = true) => {
-	const { collectionStore }: { collectionStore: CollectionStore } =
-		window as any
-	const appIds: number[] = []
-	collectionStore.allGamesCollection.allApps.forEach((app) => {
-		if (!installedOnly || app.installed) appIds.push(app.appid)
-	})
-	collectionStore.deckDesktopApps.allApps.forEach((app) => {
-		appIds.push(app.appid)
-	})
-	return appIds
-}
+const DeckRoulette = ({ serverApi }: { serverApi: ServerAPI }) => {
+	const [allApps] = useState(getAllApps())
+	const [collections] = useState(getCollections())
 
-const navigateToRandomGame = (appIds: number[]) => {
-	const randomAppId = appIds[randomIndex(appIds.length)]
-	Router.Navigate(`/library/app/${randomAppId}}`)
-	Router.CloseSideMenus()
-}
+	/* Uncomment to enable in-plugin custom lists
+	const [customLists, setCustomLists] = useState<{
+		[key: string]: number[]
+	}>()
+	const [editingList, setEditingList] = useState<{
+		listName?: string
+		appIds: number[]
+	}>()
 
-const DeckRoulette = () => {
+	useEffect(() => {
+		serverApi
+			.callPluginMethod<{}, { [key: string]: number[] }>(
+				"get_game_lists",
+				{}
+			)
+			.then((res) => {
+				console.log(res)
+				if (!res.success) return
+				setCustomLists(res.result)
+			})
+	}, [])
+
+	if (editingList)
+		return (
+			<ListEditor
+				currentName={editingList.listName}
+				currentList={editingList.appIds}
+				setEditingList={setEditingList}
+				serverApi={serverApi}
+				setCustomLists={setCustomLists}
+			/>
+		)
+  */
+
 	return (
 		<div>
 			<PanelSection title="Random Game">
+				{collections["local-install"] ? (
+					<PanelSectionRow>
+						<ButtonItem
+							layout="below"
+							onClick={() =>
+								navigateToRandomGame(
+									collections["local-install"].appIds
+								)
+							}
+						>
+							Random Installed Game (
+							{collections["local-install"].appIds.length})
+						</ButtonItem>
+					</PanelSectionRow>
+				) : null}
 				<PanelSectionRow>
 					<ButtonItem
 						layout="below"
-						onClick={() => navigateToRandomGame(getAppIds(true))}
+						onClick={() =>
+							navigateToRandomGame(
+								allApps.map(({ appId }) => appId)
+							)
+						}
 					>
-						Random Installed Game
+						Random Library Game ({allApps.length})
 					</ButtonItem>
 				</PanelSectionRow>
+			</PanelSection>
+			{/* <PanelSection title="Custom Game Lists">
+				{customLists
+					? Object.entries(customLists).map(([listName, appIds]) => (
+							<PanelSectionRow key={listName}>
+								<CustomListItem
+									onSelect={() =>
+										navigateToRandomGame(appIds)
+									}
+									onEdit={() =>
+										setEditingList({ listName, appIds })
+									}
+									onDelete={() =>
+										serverApi
+											.callPluginMethod(
+												"delete_game_list",
+												{ name: listName }
+											)
+											.then((res) => {
+												if (res.success)
+													setCustomLists(res.result)
+											})
+									}
+								>
+									<span>
+										{listName} ({appIds.length})
+									</span>
+								</CustomListItem>
+							</PanelSectionRow>
+					  ))
+					: null}
 				<PanelSectionRow>
 					<ButtonItem
 						layout="below"
-						onClick={() => navigateToRandomGame(getAppIds(false))}
+						onClick={() => {
+							showModal(
+								<ListNameModal
+									initialText=""
+									onOK={(listName) =>
+										setEditingList({ listName, appIds: [] })
+									}
+								/>
+							)
+						}}
 					>
-						Random Game (Any)
+						Add New List
 					</ButtonItem>
 				</PanelSectionRow>
+			</PanelSection> */}
+			<PanelSection title="Steam Collections">
+				{Object.entries(collections).map(([listId, list]) => (
+					<React.Fragment key={listId}>
+						{EXCLUDE_COLLECTION_IDS.includes(listId) ? null : (
+							<PanelSectionRow>
+								<ButtonItem
+									layout="below"
+									onClick={() =>
+										navigateToRandomGame(list.appIds)
+									}
+								>
+									{list.name} ({list.appIds.length})
+								</ButtonItem>
+							</PanelSectionRow>
+						)}
+					</React.Fragment>
+				))}
 			</PanelSection>
 		</div>
 	)
@@ -58,8 +153,9 @@ const DeckRoulette = () => {
 export default definePlugin((serverApi: ServerAPI) => {
 	return {
 		title: <div className={staticClasses.Title}>DeckRoulette</div>,
-		content: <DeckRoulette />,
+		content: <DeckRoulette serverApi={serverApi} />,
 		icon: <GiPerspectiveDiceSixFacesRandom />,
+		alwaysRender: true,
 		onDismount() {},
 	}
 })
