@@ -9,11 +9,21 @@ import {
 import React, { useState } from "react"
 import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi"
 
-import { EXCLUDE_COLLECTION_IDS, getAllApps, getCollections, navigateToRandomGame } from "./utils"
+import { EXCLUDE_COLLECTION_IDS, navigateToRandomGame } from "./utils"
 
 const DeckRoulette = ({ serverApi }: { serverApi: ServerAPI }) => {
-	const [allApps] = useState(getAllApps())
-	const [collections] = useState(getCollections())
+	const { collectionStore }: { collectionStore: CollectionStore } =
+		window as any
+
+	const collections = collectionStore.userCollections
+
+	const localGames: SteamCollection = collectionStore.localGamesCollection
+
+	localGames.visibleApps = localGames.visibleApps.concat(
+		collectionStore.deckDesktopApps.visibleApps
+	)
+
+	const myGamesCollection = collectionStore.myGamesCollection
 
 	/* Uncomment to enable in-plugin custom lists
 	const [customLists, setCustomLists] = useState<{
@@ -52,18 +62,20 @@ const DeckRoulette = ({ serverApi }: { serverApi: ServerAPI }) => {
 	return (
 		<div>
 			<PanelSection title="Random Game">
-				{collections["local-install"] ? (
+				{localGames ? (
 					<PanelSectionRow>
 						<ButtonItem
 							layout="below"
 							onClick={() =>
 								navigateToRandomGame(
-									collections["local-install"].appIds
+									localGames.visibleApps.map(
+										(app) => app.appid
+									)
 								)
 							}
 						>
-							Installed Game (
-							{collections["local-install"].appIds.length})
+							{localGames.displayName} (
+							{localGames.visibleApps.length})
 						</ButtonItem>
 					</PanelSectionRow>
 				) : null}
@@ -72,11 +84,14 @@ const DeckRoulette = ({ serverApi }: { serverApi: ServerAPI }) => {
 						layout="below"
 						onClick={() =>
 							navigateToRandomGame(
-								allApps.map(({ appId }) => appId)
+								myGamesCollection.visibleApps.map(
+									(app) => app.appid
+								)
 							)
 						}
 					>
-						Library Game ({allApps.length})
+						{myGamesCollection.displayName} (
+						{myGamesCollection.visibleApps.length})
 					</ButtonItem>
 				</PanelSectionRow>
 			</PanelSection>
@@ -129,17 +144,24 @@ const DeckRoulette = ({ serverApi }: { serverApi: ServerAPI }) => {
 				</PanelSectionRow>
 			</PanelSection> */}
 			<PanelSection title="Steam Collections">
-				{Object.entries(collections).map(([listId, list]) => (
-					<React.Fragment key={listId}>
-						{EXCLUDE_COLLECTION_IDS.includes(listId) ? null : (
+				{collections.map((collection) => (
+					<React.Fragment key={collection.id}>
+						{EXCLUDE_COLLECTION_IDS.includes(
+							collection.id
+						) ? null : (
 							<PanelSectionRow>
 								<ButtonItem
 									layout="below"
 									onClick={() =>
-										navigateToRandomGame(list.appIds)
+										navigateToRandomGame(
+											collection.visibleApps.map(
+												(app) => app.appid
+											)
+										)
 									}
 								>
-									{list.name} ({list.appIds.length})
+									{collection.displayName} (
+									{collection.visibleApps.length})
 								</ButtonItem>
 							</PanelSectionRow>
 						)}

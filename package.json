@@ -1,6 +1,6 @@
 {
 	"name": "decky-plugin-template",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"description": "A plugin that allows you to navigate to a random game in your library or a Steam Collection.",
 	"scripts": {
 		"build": "shx rm -rf dist && rollup -c",

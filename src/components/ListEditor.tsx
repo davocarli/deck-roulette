@@ -16,8 +16,6 @@ import {
 } from "decky-frontend-lib"
 import { useEffect, useState } from "react"
 
-import { getAllApps } from "../utils"
-
 type ListEditorProps = {
 	currentName?: string
 	currentList: number[]
@@ -70,7 +68,15 @@ const ListEditor = ({
 	const [allApps, setAllApps] =
 		useState<{ appName: String; appId: number }[]>()
 
-	useEffect(() => setAllApps(getAllApps()), [])
+	useEffect(() => {
+		const { collectionStore }: { collectionStore: CollectionStore } =
+			window as any
+		setAllApps(
+			collectionStore.allAppsCollection.allApps.map((app) => {
+				return { appName: app.display_name, appId: app.appid }
+			})
+		)
+	}, [])
 
 	if (!allApps) return <PanelSection spinner title="Loading..." />
 
