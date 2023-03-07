@@ -1,5 +1,5 @@
 {
-	"name": "decky-plugin-template",
+	"name": "deck-roulette",
 	"version": "1.1.1",
 	"description": "A plugin that allows you to navigate to a random game in your library or a Steam Collection.",
 	"scripts": {
