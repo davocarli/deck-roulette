@@ -1,4 +1,4 @@
-import { ButtonItem, DialogButton, Focusable } from "decky-frontend-lib"
+import { DialogButton, Focusable } from "decky-frontend-lib"
 import { BsFillTrashFill } from "react-icons/bs"
 import { RiPencilFill } from "react-icons/ri"
 

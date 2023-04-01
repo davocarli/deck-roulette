@@ -1,18 +1,13 @@
 import {
-	ButtonItem,
 	ConfirmModal,
-	DialogBody,
-	DialogBodyText,
 	DialogButton,
 	Focusable,
-	ModalRoot,
 	PanelSection,
 	PanelSectionRow,
 	ServerAPI,
 	showModal,
-	SliderField,
 	TextField,
-	ToggleField
+	ToggleField,
 } from "decky-frontend-lib"
 import { useEffect, useState } from "react"
 

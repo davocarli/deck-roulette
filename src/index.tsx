@@ -4,9 +4,9 @@ import {
 	PanelSection,
 	PanelSectionRow,
 	ServerAPI,
-	staticClasses
+	staticClasses,
 } from "decky-frontend-lib"
-import React, { useState } from "react"
+import React from "react"
 import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi"
 
 import { EXCLUDE_COLLECTION_IDS, navigateToRandomGame } from "./utils"
@@ -19,9 +19,10 @@ const DeckRoulette = ({ serverApi }: { serverApi: ServerAPI }) => {
 
 	const localGames: SteamCollection = collectionStore.localGamesCollection
 
-	localGames.visibleApps = localGames.visibleApps.concat(
-		collectionStore.deckDesktopApps.visibleApps
-	)
+	const allInstalled = [
+		...localGames.visibleApps,
+		...collectionStore.deckDesktopApps.visibleApps,
+	]
 
 	const myGamesCollection = collectionStore.myGamesCollection
 
@@ -68,14 +69,11 @@ const DeckRoulette = ({ serverApi }: { serverApi: ServerAPI }) => {
 							layout="below"
 							onClick={() =>
 								navigateToRandomGame(
-									localGames.visibleApps.map(
-										(app) => app.appid
-									)
+									allInstalled.map((app) => app.appid)
 								)
 							}
 						>
-							{localGames.displayName} (
-							{localGames.visibleApps.length})
+							{localGames.displayName} ({allInstalled.length})
 						</ButtonItem>
 					</PanelSectionRow>
 				) : null}
@@ -177,7 +175,7 @@ export default definePlugin((serverApi: ServerAPI) => {
 		title: <div className={staticClasses.Title}>DeckRoulette</div>,
 		content: <DeckRoulette serverApi={serverApi} />,
 		icon: <GiPerspectiveDiceSixFacesRandom />,
-		alwaysRender: true,
+		alwaysRender: false,
 		onDismount() {},
 	}
 })
