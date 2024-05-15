@@ -1,6 +1,6 @@
 {
 	"name": "deck-roulette",
-	"version": "1.1.2",
+	"version": "1.1.3",
 	"description": "A plugin that allows you to navigate to a random game in your library or a Steam Collection.",
 	"scripts": {
 		"build": "shx rm -rf dist && rollup -c",
@@ -41,7 +41,7 @@
 		"typescript": "^4.9.5"
 	},
 	"dependencies": {
-		"decky-frontend-lib": "^3.21.0",
+		"decky-frontend-lib": "^3.25.0",
 		"react-icons": "^4.8.0"
 	},
 	"pnpm": {
